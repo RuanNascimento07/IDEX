@@ -69,7 +69,6 @@
       box-shadow: 0 0 0 3px #000000;
     }
     button {
-      background: #e00909;
       color: white;
       border: none;
       padding: 12px;
@@ -77,10 +76,10 @@
       font-size: 1em;
       cursor: pointer;
       transition: background 0.3s;
-      width: 100%;
+      flex: 1;
     }
     button:hover {
-      background: #393939;
+      opacity: 0.9;
     }
   </style>
 </head>
@@ -102,7 +101,7 @@
           </div>
           <div>
             <label for="cpf">CPF</label>
-            <input type="text" id="cpf" name="cpf" required>
+            <input type="text" id="cpf" name="cpf" required maxlength="14">
           </div>
         </div>
         <div class="grid-2">
@@ -112,7 +111,7 @@
           </div>
           <div>
             <label for="telefone">Telefone</label>
-            <input type="tel" id="telefone" name="telefone" required>
+            <input type="tel" id="telefone" name="telefone" required maxlength="15">
           </div>
         </div>
       </div>
@@ -123,7 +122,7 @@
         <div class="grid-2">
           <div>
             <label for="cep">CEP</label>
-            <input type="text" id="cep" name="cep" required>
+            <input type="text" id="cep" name="cep" required maxlength="9">
           </div>
           <div>
             <label for="rua">Rua</label>
@@ -161,15 +160,52 @@
         </div>
       </div>
 
-      <!-- Botão -->
-      <button type="submit">Cadastrar</button>
+      <!-- Botões -->
+      <div style="display: flex; gap: 10px;">
+        <button type="submit" style="background: #e00909;">Cadastrar</button>
+        <button type="button" style="background: #888888;" id="btnLimpar">Limpar</button>
+      </div>
     </form>
   </div>
 
   <script>
+    const form = document.getElementById('formCadastro');
+
+    // Máscara de CPF
+    const cpfInput = document.getElementById('cpf');
+    cpfInput.addEventListener('input', () => {
+      let v = cpfInput.value.replace(/\D/g, '');
+      v = v.replace(/(\d{3})(\d)/, '$1.$2');
+      v = v.replace(/(\d{3})(\d)/, '$1.$2');
+      v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+      cpfInput.value = v;
+    });
+
+    // Máscara de telefone
+    const telInput = document.getElementById('telefone');
+    telInput.addEventListener('input', () => {
+      let v = telInput.value.replace(/\D/g, '');
+      if (v.length <= 10) {
+        v = v.replace(/(\d{2})(\d)/, '($1) $2');
+        v = v.replace(/(\d{4})(\d)/, '$1-$2');
+      } else {
+        v = v.replace(/(\d{2})(\d)/, '($1) $2');
+        v = v.replace(/(\d{5})(\d)/, '$1-$2');
+      }
+      telInput.value = v;
+    });
+
+    // Máscara de CEP
+    const cepInput = document.getElementById('cep');
+    cepInput.addEventListener('input', () => {
+      let v = cepInput.value.replace(/\D/g, '');
+      v = v.replace(/(\d{5})(\d)/, '$1-$2');
+      cepInput.value = v;
+    });
+
     // Preencher endereço pelo CEP (ViaCEP)
-    document.getElementById('cep').addEventListener('blur', function() {
-      const cep = this.value.replace(/\\D/g, '');
+    cepInput.addEventListener('blur', function() {
+      const cep = this.value.replace(/\D/g, '');
       if (cep.length === 8) {
         fetch(`https://viacep.com.br/ws/${cep}/json/`)
           .then(res => res.json())
@@ -185,6 +221,19 @@
           })
           .catch(() => alert('Erro ao consultar o CEP.'));
       }
+    });
+
+    // Validação do formulário
+    form.addEventListener('submit', (e) => {
+      if (!form.checkValidity()) {
+        e.preventDefault();
+        alert('Por favor, preencha todos os campos obrigatórios corretamente.');
+      }
+    });
+
+    // Botão limpar
+    document.getElementById('btnLimpar').addEventListener('click', () => {
+      form.reset();
     });
   </script>
 </body>
