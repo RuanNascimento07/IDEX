@@ -5,6 +5,10 @@ const app = express()
 const port = 3000
 app.use(express.json())
 
+//npm i cors
+const cors = require("cors")
+app.use(cors())
+
 // npm i mysql2
 const db = require("./db")
 

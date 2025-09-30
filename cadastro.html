@@ -223,18 +223,11 @@
       }
     });
 
-    // Validação do formulário
-    form.addEventListener('submit', (e) => {
-      if (!form.checkValidity()) {
-        e.preventDefault();
-        alert('Por favor, preencha todos os campos obrigatórios corretamente.');
-      }
-    });
-
     // Botão limpar
     document.getElementById('btnLimpar').addEventListener('click', () => {
       form.reset();
     });
   </script>
+<script src="./cadastro.js"></script>
 </body>
 </html>
