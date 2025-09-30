@@ -18,16 +18,16 @@ app.post("/cadastrar", async (req,res) => {
         const resultado = await db.pool.query(
         `INSERT INTO cliente (nome, cpf, email, 
             telefone, rua, n_casa, bairro, cidade, uf, cep, senha)
-             values (?,?,?,?,?,?,?,?,?,?,?)`
-          
+             values (?,?,?,?,?,?,?,?,?,?,?)`,          
             [cliente.nome, cliente.cpf, cliente.email, 
                 cliente.telefone, cliente.rua, cliente.n_casa, 
                 cliente.bairro, cliente.cidade, cliente.uf, cliente.cep, cliente.senha])
 
-             res.status(500).json ({erro:"Erro inteno na API"})
+             res.status(200).json({id: resultado[0].insertId})
 
     } catch (erro){
-        res.status(500).json({erro: "Erro inteiro na API"})
+        res.status(500).json({erro: "Erro interno na API"})
+        console.log(erro)
     }
 })
 
