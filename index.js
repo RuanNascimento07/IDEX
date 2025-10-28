@@ -9,6 +9,11 @@ app.use(express.json())
 const cors = require("cors")
 app.use(cors())
 
+// npm i jsonwebtoken
+const jwt = require("jsonwebtoken")
+
+
+
 // npm i mysql2
 const db = require("./db")
 
@@ -63,7 +68,9 @@ try {
     if (dados.senha != login.senha){
         return res.status(401).json({erro: "Credenciais inválidas!"})
     }
-    return res.status(200).json({token: "token aqui"})
+  // criar um token para o usuário 
+  const token = jwt.sign(dados, "senha_muito_forte", {expiresIn: '1m'})
+    return res.status(200).json({token: token})
 } catch (error) {
     return res.status(500).json({erro: "Erro interno na API" + error})
 }
